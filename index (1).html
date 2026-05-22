@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Red Bull Racing F1</title>
+  <link rel="stylesheet" href="style (1).css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ── LOADER ── -->
+  <div class="loader-overlay">
+    <div class="loader-inner">
+      <div class="loader-ring"></div>
+      <div class="loader-ring loader-ring--2"></div>
+      <div class="loader-ring loader-ring--3"></div>
+      <span class="loader-text">INICIANDO</span>
+    </div>
+  </div>
+
+  <!-- ── FUNDO ANIMADO ── -->
+  <div class="bg-animated">
+    <div class="bg-grid"></div>
+    <div class="bg-particles">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <div class="bg-glow bg-glow--red"></div>
+    <div class="bg-glow bg-glow--blue"></div>
+  </div>
+
+  <!-- ── HEADER / HERO ── -->
+  <header class="hero">
+    <nav class="nav">
+      <div class="nav-logo">
+        <span class="neon-text neon-red">RED</span>
+        <span class="neon-text neon-blue">BULL</span>
+        <span class="nav-sub">RACING</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#sobre">EQUIPE</a></li>
+        <li><a href="#pilotos">PILOTOS</a></li>
+        <li><a href="#conquistas">TÍTULOS</a></li>
+        <li><a href="#carro">CARRO</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero-content">
+      <p class="hero-season">TEMPORADA 2025 · F1 WORLD CHAMPIONSHIP</p>
+      <h1 class="hero-title">
+        <span class="neon-text neon-red">RED BULL</span><br>
+        <span class="neon-text neon-white">RACING</span>
+      </h1>
+      <p class="hero-subtitle">Domínio. Velocidade. Perfeição.</p>
+
+      <!-- IMAGEM FLUTUANDO -->
+      <div class="car-float-wrapper">
+        <div class="car-shadow"></div>
+        <img
+          class="car-float"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Red_Bull_Racing_RB19_2023_front.png/1280px-Red_Bull_Racing_RB19_2023_front.png"
+          alt="Red Bull RB19"
+          onerror="this.style.display='none'"
+        />
+        <div class="car-glow-bar"></div>
+      </div>
+
+      <!-- BOTÃO PULSANDO -->
+      <a href="#sobre" class="btn-pulse">
+        <span class="btn-pulse__inner">EXPLORAR AGORA</span>
+        <span class="btn-pulse__ring"></span>
+        <span class="btn-pulse__ring btn-pulse__ring--2"></span>
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num neon-text neon-red">6</span>
+        <span class="stat-label">TÍTULOS DE CONSTRUTORES</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num neon-text neon-blue">7</span>
+        <span class="stat-label">TÍTULOS DE PILOTOS</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num neon-text neon-red">118</span>
+        <span class="stat-label">VITÓRIAS NA F1</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── SEÇÃO SOBRE ── -->
+  <section id="sobre" class="section section--dark">
+    <div class="container">
+      <div class="section-label">SOBRE A EQUIPE</div>
+      <h2 class="section-title neon-text neon-white">HISTÓRIA DE <span class="neon-red">CAMPEÕES</span></h2>
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-card__icon">🏁</div>
+          <h3>FUNDADA EM 2005</h3>
+          <p>A Red Bull Racing foi fundada por Dietrich Mateschitz após a aquisição da equipe Jaguar Racing. Em apenas três anos, se tornou uma potência mundial.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card__icon">⚡</div>
+          <h3>MOTOR HONDA RBPT</h3>
+          <p>Parceria estratégica com a Honda fornece uma das unidades de potência mais eficientes do grid, combinando performance brutal com eficiência energética.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card__icon">🏆</div>
+          <h3>ERA DOMINANTE</h3>
+          <p>Entre 2010-2013 e novamente a partir de 2022, a Red Bull estabeleceu recordes históricos de vitórias consecutivas, incluindo 21 vitórias em 2023.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card__icon">🔬</div>
+          <h3>RED BULL POWERTRAINS</h3>
+          <p>A equipe investe massivamente em tecnologia, com o Red Bull Technology Campus em Milton Keynes sendo um dos centros de inovação mais avançados do esporte.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEÇÃO PILOTOS ── -->
+  <section id="pilotos" class="section section--accent">
+    <div class="container">
+      <div class="section-label">GRID 2025</div>
+      <h2 class="section-title neon-text neon-white">NOSSOS <span class="neon-red">PILOTOS</span></h2>
+      <div class="pilots-grid">
+        <div class="pilot-card">
+          <div class="pilot-number neon-text neon-red">1</div>
+          <div class="pilot-info">
+            <h3 class="pilot-name">MAX VERSTAPPEN</h3>
+            <p class="pilot-nation">🇳🇱 Holanda</p>
+            <div class="pilot-tags">
+              <span class="tag">4× CAMPEÃO MUNDIAL</span>
+              <span class="tag tag--outline">LENDA VIVA</span>
+            </div>
+            <div class="pilot-stats">
+              <div><b>103</b><small>VITÓRIAS</small></div>
+              <div><b>41</b><small>POLES</small></div>
+              <div><b>107</b><small>PÓDIOS</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="pilot-card pilot-card--alt">
+          <div class="pilot-number neon-text neon-blue">22</div>
+          <div class="pilot-info">
+            <h3 class="pilot-name">YUKI TSUNODA</h3>
+            <p class="pilot-nation">🇯🇵 Japão</p>
+            <div class="pilot-tags">
+              <span class="tag tag--blue">PROMESSA 2025</span>
+              <span class="tag tag--outline">ESTREIA RBRT</span>
+            </div>
+            <div class="pilot-stats">
+              <div><b>4</b><small>PÓDIOS</small></div>
+              <div><b>1</b><small>POLE</small></div>
+              <div><b>89</b><small>GPs</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CARROSSEL AUTOMÁTICO ── -->
+  <section id="conquistas" class="section section--dark">
+    <div class="container">
+      <div class="section-label">CONQUISTAS</div>
+      <h2 class="section-title neon-text neon-white">TÍTULOS <span class="neon-red">MUNDIAIS</span></h2>
+
+      <div class="carousel-wrapper">
+        <div class="carousel-track">
+          <!-- slide 1 -->
+          <div class="carousel-slide">
+            <div class="slide-year neon-text neon-red">2010</div>
+            <div class="slide-pilot">Sebastian Vettel</div>
+            <div class="slide-detail">1º TÍTULO · MUNDIAL DE PILOTOS</div>
+            <div class="slide-desc">Virada emocionante na última corrida em Abu Dhabi. Vettel se torna o campeão mais jovem da história da F1.</div>
+          </div>
+          <!-- slide 2 -->
+          <div class="carousel-slide">
+            <div class="slide-year neon-text neon-red">2011</div>
+            <div class="slide-pilot">Sebastian Vettel</div>
+            <div class="slide-detail">2º TÍTULO · DOMINÂNCIA TOTAL</div>
+            <div class="slide-desc">15 vitórias em 19 corridas. Red Bull conquista ambos os títulos com autoridade absoluta.</div>
+          </div>
+          <!-- slide 3 -->
+          <div class="carousel-slide">
+            <div class="slide-year neon-text neon-red">2012</div>
+            <div class="slide-pilot">Sebastian Vettel</div>
+            <div class="slide-detail">3º TÍTULO · BATALHA ÉPICA</div>
+            <div class="slide-desc">Disputa acirrada com Fernando Alonso. Vettel reage no segundo semestre e conquista o tricampeonato.</div>
+          </div>
+          <!-- slide 4 -->
+          <div class="carousel-slide">
+            <div class="slide-year neon-text neon-red">2013</div>
+            <div class="slide-pilot">Sebastian Vettel</div>
+            <div class="slide-detail">4º TÍTULO · SEQUÊNCIA HISTÓRICA</div>
+            <div class="slide-desc">9 vitórias consecutivas. Tetracampeonato de Vettel e 4º título de construtores para a Red Bull.</div>
+          </div>
+          <!-- slide 5 -->
+          <div class="carousel-slide">
+            <div class="slide-year neon-text neon-blue">2022</div>
+            <div class="slide-pilot">Max Verstappen</div>
+            <div class="slide-detail">REGRESSO AO TOPO</div>
+            <div class="slide-desc">Verstappen vence o campeonato com dominância crescente, inaugurando uma nova era de supremacia da Red Bull.</div>
+          </div>
+          <!-- slide 6 -->
+          <div class="carousel-slide">
+            <div class="slide-year neon-text neon-blue">2023</div>
+            <div class="slide-pilot">Max Verstappen</div>
+            <div class="slide-detail">RECORDE HISTÓRICO · 21 VITÓRIAS</div>
+            <div class="slide-desc">A melhor temporada da história da F1. 21 vitórias em 22 corridas. Um recorde que pode nunca ser superado.</div>
+          </div>
+          <!-- repete para loop visual -->
+          <div class="carousel-slide">
+            <div class="slide-year neon-text neon-red">2010</div>
+            <div class="slide-pilot">Sebastian Vettel</div>
+            <div class="slide-detail">1º TÍTULO · MUNDIAL DE PILOTOS</div>
+            <div class="slide-desc">Virada emocionante na última corrida em Abu Dhabi. Vettel se torna o campeão mais jovem da história da F1.</div>
+          </div>
+        </div>
+        <div class="carousel-dots">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEÇÃO CARRO ── -->
+  <section id="carro" class="section section--dark">
+    <div class="container">
+      <div class="section-label">TECNOLOGIA</div>
+      <h2 class="section-title neon-text neon-white">RB21 · TEMPORADA <span class="neon-red">2025</span></h2>
+      <div class="car-specs">
+        <div class="spec-item">
+          <div class="spec-bar-wrap">
+            <span class="spec-name">VELOCIDADE MÁXIMA</span>
+            <span class="spec-value neon-text neon-red">372 km/h</span>
+          </div>
+          <div class="spec-bar"><div class="spec-fill" style="--w:96%"></div></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-bar-wrap">
+            <span class="spec-name">DOWNFORCE</span>
+            <span class="spec-value neon-text neon-red">EXTREMO</span>
+          </div>
+          <div class="spec-bar"><div class="spec-fill" style="--w:90%"></div></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-bar-wrap">
+            <span class="spec-name">POTÊNCIA COMBINADA</span>
+            <span class="spec-value neon-text neon-red">~1000 cv</span>
+          </div>
+          <div class="spec-bar"><div class="spec-fill" style="--w:99%"></div></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-bar-wrap">
+            <span class="spec-name">0 a 100 km/h</span>
+            <span class="spec-value neon-text neon-red">2.0s</span>
+          </div>
+          <div class="spec-bar"><div class="spec-fill" style="--w:98%"></div></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-bar-wrap">
+            <span class="spec-name">EFICIÊNCIA AERODINÂMICA</span>
+            <span class="spec-value neon-text neon-blue">ÉLITE</span>
+          </div>
+          <div class="spec-bar spec-bar--blue"><div class="spec-fill" style="--w:94%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RODAPÉ ── -->
+  <footer class="footer">
+    <div class="footer-logo">
+      <span class="neon-text neon-red">RED BULL</span>
+      <span class="neon-text neon-white"> RACING</span>
+    </div>
+    <p class="footer-copy">© 2025 Red Bull Racing — Todos os direitos reservados.<br>
+    <small>Site criado para fins ilustrativos. Red Bull Racing é marca registrada de Red Bull GmbH.</small></p>
+    <div class="footer-line"></div>
+  </footer>
+
+</body>
+</html>
