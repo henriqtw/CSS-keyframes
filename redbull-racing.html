@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oracle Red Bull Racing</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --rb-red:#e00400;
+  --rb-red-dark:#8b0000;
+  --rb-gold:#ffb800;
+  --rb-blue:#1a2b5a;
+  --rb-navy:#050c1f;
+  --dark:#03060f;
+  --white:rgba(255,255,255,0.92);
+  --muted:rgba(255,255,255,0.45);
+  --faint:rgba(255,255,255,0.15);
+
+  --glass-bg:rgba(255,255,255,0.06);
+  --glass-border:1px solid rgba(255,255,255,0.12);
+  --glass-shadow:0 8px 40px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'Barlow',sans-serif;
+  background:var(--dark);
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ─── LOADER ─── */
+#loader{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--dark);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:32px;
+  transition:opacity .8s ease,visibility .8s ease;
+}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none}
+
+.loader-bull{
+  width:80px;height:80px;
+  position:relative;
+}
+.loader-bull svg{width:100%;height:100%;animation:loaderSpin 1.2s linear infinite}
+
+.loader-rings{position:absolute;inset:-20px}
+.loader-ring{
+  position:absolute;inset:0;
+  border-radius:50%;
+  border:2px solid transparent;
+}
+.loader-ring:nth-child(1){border-top-color:var(--rb-red);animation:spin 1s linear infinite}
+.loader-ring:nth-child(2){inset:8px;border-right-color:var(--rb-gold);animation:spin 1.5s linear infinite reverse}
+.loader-ring:nth-child(3){inset:16px;border-bottom-color:rgba(255,255,255,0.3);animation:spin 2s linear infinite}
+
+.loader-text{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:600;
+  letter-spacing:6px;text-transform:uppercase;
+  color:var(--muted);
+  animation:textBlink 1s ease-in-out infinite alternate;
+}
+.loader-bar{
+  width:220px;height:2px;
+  background:rgba(255,255,255,0.08);
+  border-radius:1px;overflow:hidden;
+}
+.loader-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--rb-red),var(--rb-gold));
+  width:0%;animation:fillBar 2.5s ease forwards;
+  box-shadow:0 0 10px var(--rb-red);
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes loaderSpin{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.05)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes textBlink{0%{opacity:.4}100%{opacity:1;color:var(--rb-gold)}}
+@keyframes fillBar{to{width:100%}}
+
+/* ─── BACKGROUND ─── */
+#bg-canvas{position:fixed;inset:0;z-index:0}
+
+.bg-grid{
+  position:fixed;inset:0;z-index:1;
+  background-image:
+    linear-gradient(rgba(224,4,0,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(224,4,0,0.04) 1px,transparent 1px);
+  background-size:80px 80px;
+  animation:gridScroll 12s linear infinite;
+}
+@keyframes gridScroll{0%{background-position:0 0}100%{background-position:0 80px}}
+
+.bg-glow-left{
+  position:fixed;top:-20%;left:-10%;z-index:1;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(224,4,0,0.12) 0%,transparent 70%);
+  animation:glowDrift 8s ease-in-out infinite alternate;
+}
+.bg-glow-right{
+  position:fixed;bottom:-20%;right:-10%;z-index:1;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,184,0,0.08) 0%,transparent 70%);
+  animation:glowDrift 10s ease-in-out infinite alternate-reverse;
+}
+@keyframes glowDrift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.1)}}
+
+/* scanlines */
+body::after{
+  content:'';position:fixed;inset:0;z-index:2;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 3px,rgba(0,0,0,0.025) 3px,rgba(0,0,0,0.025) 4px);
+  pointer-events:none;
+}
+
+/* ─── LAYOUT ─── */
+main{position:relative;z-index:10}
+
+section{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:80px 24px;
+  position:relative;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 48px;
+  background:rgba(3,6,15,0.7);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(224,4,0,0.2);
+  transition:padding .3s;
+}
+.nav-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--white);
+  display:flex;align-items:center;gap:12px;
+}
+.nav-logo-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--rb-red);
+  box-shadow:0 0 12px var(--rb-red);
+  animation:dotPulse 1.5s ease-in-out infinite;
+}
+@keyframes dotPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.7}}
+
+.nav-links{display:flex;gap:8px;list-style:none}
+.nav-links a{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  padding:8px 18px;border-radius:6px;
+  transition:color .2s,background .2s;
+}
+.nav-links a:hover{color:var(--white);background:var(--faint)}
+
+/* ─── HERO ─── */
+#hero{min-height:100vh;padding-top:100px;gap:0}
+
+.hero-eyebrow{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:8px;text-transform:uppercase;
+  color:var(--rb-gold);
+  text-shadow:0 0 20px rgba(255,184,0,0.6);
+  margin-bottom:24px;
+  animation:fadeUp .8s ease both;
+}
+
+.hero-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(4rem,14vw,10rem);
+  font-weight:900;line-height:.9;
+  text-align:center;text-transform:uppercase;
+  margin-bottom:32px;
+}
+.hero-title .line-red{
+  display:block;
+  color:var(--rb-red);
+  text-shadow:
+    0 0 10px var(--rb-red),
+    0 0 30px var(--rb-red),
+    0 0 70px rgba(224,4,0,.5),
+    0 0 120px rgba(224,4,0,.25);
+  animation:neonFlicker 4s ease-in-out infinite alternate, fadeUp .8s .1s ease both;
+}
+.hero-title .line-white{
+  display:block;
+  color:var(--white);
+  animation:fadeUp .8s .2s ease both;
+  -webkit-text-stroke:1px rgba(255,255,255,.3);
+}
+.hero-title .line-gold{
+  display:block;
+  color:var(--rb-gold);
+  text-shadow:
+    0 0 10px var(--rb-gold),
+    0 0 30px rgba(255,184,0,.6),
+    0 0 60px rgba(255,184,0,.3);
+  animation:neonFlicker 3s 1s ease-in-out infinite alternate, fadeUp .8s .3s ease both;
+}
+
+@keyframes neonFlicker{
+  0%,100%{filter:brightness(1)}
+  92%{filter:brightness(1)}
+  93%{filter:brightness(.5)}
+  94%{filter:brightness(1)}
+  96%{filter:brightness(.8)}
+  97%{filter:brightness(1.2)}
+}
+
+.hero-sub{
+  font-size:clamp(.9rem,2vw,1.1rem);
+  font-weight:300;letter-spacing:4px;text-transform:uppercase;
+  color:var(--muted);text-align:center;
+  margin-bottom:48px;
+  animation:fadeUp .8s .4s ease both;
+}
+
+@keyframes fadeUp{
+  0%{opacity:0;transform:translateY(30px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+
+/* ─── FLOATING CAR ─── */
+.float-wrap{
+  position:relative;
+  width:min(700px,90vw);
+  margin:40px 0;
+  animation:fadeUp .8s .5s ease both;
+}
+.float-car{
+  width:100%;
+  border-radius:16px;
+  object-fit:cover;
+  animation:floatCar 6s ease-in-out infinite;
+  filter:drop-shadow(0 30px 60px rgba(224,4,0,.4));
+  position:relative;z-index:2;
+}
+@keyframes floatCar{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  30%{transform:translateY(-16px) rotate(.4deg)}
+  70%{transform:translateY(8px) rotate(-.3deg)}
+}
+
+.float-shadow{
+  position:absolute;bottom:-20px;left:10%;right:10%;
+  height:30px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(224,4,0,.35) 0%,transparent 70%);
+  animation:shadowPulse 6s ease-in-out infinite;
+  filter:blur(8px);
+}
+@keyframes shadowPulse{
+  0%,100%{transform:scaleX(1);opacity:.7}
+  30%{transform:scaleX(.85);opacity:.4}
+  70%{transform:scaleX(1.05);opacity:.8}
+}
+
+.speed-lines{
+  position:absolute;inset:0;z-index:1;
+  overflow:hidden;border-radius:16px;pointer-events:none;
+}
+.speed-line{
+  position:absolute;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(224,4,0,.4),transparent);
+  animation:speedLine 2s linear infinite;
+}
+
+/* ─── BTN PULSE ─── */
+.btn-wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;animation:fadeUp .8s .6s ease both}
+
+.btn-rb{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  padding:16px 40px;
+  border:none;border-radius:999px;
+  background:linear-gradient(135deg,var(--rb-red) 0%,#c00300 100%);
+  color:#fff;cursor:pointer;
+  position:relative;overflow:hidden;
+  box-shadow:0 8px 0 var(--rb-red-dark),0 12px 24px rgba(224,4,0,.4);
+  transition:transform .1s,box-shadow .1s;
+  animation:btnRbPulse 2.5s ease-in-out infinite;
+}
+.btn-rb::before{
+  content:'';position:absolute;
+  top:0;left:-70%;width:40%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  transform:skewX(-15deg);
+  transition:left .5s ease;
+}
+.btn-rb:hover::before{left:130%}
+.btn-rb:hover{animation-play-state:paused;box-shadow:0 8px 0 var(--rb-red-dark),0 16px 30px rgba(224,4,0,.6)}
+.btn-rb:active{transform:translateY(6px);box-shadow:0 2px 0 var(--rb-red-dark),0 4px 12px rgba(224,4,0,.3)}
+
+.btn-outline{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  padding:15px 40px;
+  border:2px solid rgba(255,255,255,0.25);
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(10px);
+  color:var(--white);cursor:pointer;
+  transition:border-color .3s,background .3s,transform .15s;
+  animation:btnGlassPulse 3s ease-in-out infinite;
+}
+.btn-outline:hover{border-color:var(--rb-gold);background:rgba(255,184,0,.08);transform:translateY(-2px);animation-play-state:paused}
+
+@keyframes btnRbPulse{
+  0%,100%{box-shadow:0 8px 0 var(--rb-red-dark),0 12px 24px rgba(224,4,0,.35),0 0 0 0 rgba(224,4,0,0)}
+  50%{box-shadow:0 8px 0 var(--rb-red-dark),0 12px 24px rgba(224,4,0,.45),0 0 0 10px rgba(224,4,0,.1)}
+}
+@keyframes btnGlassPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(255,184,0,0)}
+  50%{box-shadow:0 0 0 8px rgba(255,184,0,.06)}
+}
+
+/* ─── STATS ─── */
+.stats-row{
+  display:flex;gap:48px;flex-wrap:wrap;justify-content:center;
+  margin-top:60px;animation:fadeUp .8s .7s ease both;
+}
+.stat{text-align:center}
+.stat-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(2rem,6vw,4rem);font-weight:900;
+  background:linear-gradient(135deg,var(--rb-red),var(--rb-gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.stat-label{
+  font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);margin-top:6px;
+}
+
+/* ─── DIVIDER ─── */
+.section-divider{
+  width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--rb-red) 30%,var(--rb-gold) 50%,var(--rb-red) 70%,transparent);
+  opacity:.4;margin:0;
+}
+
+/* ─── CAROUSEL SECTION ─── */
+#carousel-section{
+  padding:100px 0;min-height:auto;
+  background:linear-gradient(180deg,transparent 0%,rgba(26,43,90,.15) 50%,transparent 100%);
+}
+
+.section-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:6px;text-transform:uppercase;
+  color:var(--rb-red);text-shadow:0 0 20px rgba(224,4,0,.5);
+  margin-bottom:16px;
+}
+.section-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(2rem,6vw,4rem);font-weight:900;text-transform:uppercase;
+  text-align:center;margin-bottom:56px;
+  color:var(--white);
+}
+.section-title span{color:var(--rb-red)}
+
+.carousel-outer{width:100%;overflow:hidden;position:relative}
+.carousel-outer::before,.carousel-outer::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:5;pointer-events:none;
+}
+.carousel-outer::before{left:0;background:linear-gradient(90deg,var(--dark),transparent)}
+.carousel-outer::after{right:0;background:linear-gradient(-90deg,var(--dark),transparent)}
+
+.carousel-track{
+  display:flex;gap:0;
+  animation:carouselSlide 28s linear infinite;
+}
+.carousel-track:hover{animation-play-state:paused}
+
+@keyframes carouselSlide{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
+.c-card{
+  min-width:340px;padding:32px;
+  background:var(--glass-bg);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.08);
+  border-top:2px solid var(--rb-red);
+  margin-right:20px;
+  flex-shrink:0;
+  transition:border-color .3s,transform .3s;
+  position:relative;overflow:hidden;
+}
+.c-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--rb-red),var(--rb-gold),transparent);
+}
+.c-card:hover{border-top-color:var(--rb-gold);transform:translateY(-4px)}
+.c-card:nth-child(4n+2){border-top-color:var(--rb-gold)}
+.c-card:nth-child(4n+3){border-top-color:rgba(255,255,255,.3)}
+
+.c-year{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:4px;
+  color:var(--rb-gold);margin-bottom:12px;
+}
+.c-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:24px;font-weight:800;text-transform:uppercase;
+  color:var(--white);margin-bottom:8px;line-height:1.1;
+}
+.c-desc{font-size:14px;color:var(--muted);line-height:1.6}
+
+.c-badge{
+  display:inline-block;margin-top:16px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  padding:4px 14px;border-radius:999px;
+  background:rgba(224,4,0,.15);
+  border:1px solid rgba(224,4,0,.3);
+  color:var(--rb-red);
+}
+.c-badge.gold{background:rgba(255,184,0,.1);border-color:rgba(255,184,0,.3);color:var(--rb-gold)}
+
+/* ─── DRIVERS SECTION ─── */
+#drivers{background:none}
+
+.drivers-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;width:100%;max-width:900px;
+  margin-top:24px;
+}
+
+.driver-card{
+  background:var(--glass-bg);
+  backdrop-filter:blur(16px);
+  border:var(--glass-border);
+  border-radius:4px;
+  padding:40px 32px;
+  position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s;
+  cursor:pointer;
+}
+.driver-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--rb-red),var(--rb-gold));
+}
+.driver-card::after{
+  content:'';position:absolute;
+  bottom:-40px;right:-40px;
+  width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,rgba(224,4,0,.12) 0%,transparent 70%);
+  transition:transform .4s;
+}
+.driver-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(224,4,0,.2)}
+.driver-card:hover::after{transform:scale(1.5)}
+
+.driver-number{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:80px;font-weight:900;line-height:1;
+  color:rgba(224,4,0,.15);
+  position:absolute;top:16px;right:24px;
+  transition:color .3s;
+}
+.driver-card:hover .driver-number{color:rgba(224,4,0,.3)}
+
+.driver-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:36px;font-weight:900;text-transform:uppercase;
+  line-height:1;color:var(--white);
+  position:relative;z-index:1;
+}
+.driver-firstname{display:block;font-size:20px;font-weight:300;color:var(--muted)}
+.driver-country{
+  font-size:12px;font-weight:500;letter-spacing:3px;text-transform:uppercase;
+  color:var(--rb-gold);margin-top:12px;margin-bottom:24px;
+}
+.driver-stat{
+  display:flex;flex-direction:column;gap:8px;
+}
+.driver-stat-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);
+  font-size:13px;
+}
+.driver-stat-row span:first-child{color:var(--muted)}
+.driver-stat-row span:last-child{font-weight:600;color:var(--white)}
+
+/* ─── FOOTER ─── */
+footer{
+  position:relative;z-index:10;
+  padding:60px 48px 40px;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:24px;
+}
+.footer-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;letter-spacing:2px;text-transform:uppercase;
+}
+.footer-logo span{color:var(--rb-red)}
+.footer-note{font-size:12px;color:var(--faint);letter-spacing:1px}
+.footer-line{
+  width:100%;height:1px;margin-top:24px;
+  background:linear-gradient(90deg,var(--rb-red),var(--rb-gold) 50%,transparent);
+  opacity:.3;
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  .nav-links{display:none}
+  section{padding:60px 16px}
+  .stats-row{gap:28px}
+  footer{padding:40px 20px 28px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-bull">
+    <div class="loader-rings">
+      <div class="loader-ring"></div>
+      <div class="loader-ring"></div>
+      <div class="loader-ring"></div>
+    </div>
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="32" fill="rgba(224,4,0,0.15)" stroke="rgba(224,4,0,0.3)" stroke-width="1"/>
+      <text x="40" y="47" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="900" font-size="22" fill="#e00400">RBR</text>
+    </svg>
+  </div>
+  <div class="loader-text">Oracle Red Bull Racing</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- BG -->
+<canvas id="bg-canvas"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow-left"></div>
+<div class="bg-glow-right"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    Oracle Red Bull Racing
+  </div>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#carousel-section">História</a></li>
+    <li><a href="#drivers">Pilotos</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="hero-eyebrow">Oracle Red Bull Racing · Formula 1</p>
+
+    <h1 class="hero-title">
+      <span class="line-red">Red</span>
+      <span class="line-white">Bull</span>
+      <span class="line-gold">Racing</span>
+    </h1>
+
+    <p class="hero-sub">Velocidade · Inovação · Domínio</p>
+
+    <!-- FLOATING CAR placeholder -->
+    <div class="float-wrap">
+      <div style="width:100%;height:220px;background:linear-gradient(135deg,rgba(224,4,0,0.15),rgba(26,43,90,0.3));border-radius:16px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(224,4,0,0.2);animation:floatCar 6s ease-in-out infinite;filter:drop-shadow(0 30px 60px rgba(224,4,0,0.4));position:relative;overflow:hidden;">
+        <!-- substitua por: <img class="float-car" src="./images/carro-1.png"> -->
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(224,4,0,0.04) 60px,rgba(224,4,0,0.04) 61px),repeating-linear-gradient(180deg,transparent,transparent 40px,rgba(255,255,255,0.02) 40px,rgba(255,255,255,0.02) 41px)"></div>
+        <div style="text-align:center;position:relative;z-index:2;">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:4px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:8px;">Imagem do carro</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;color:rgba(224,4,0,0.5);">substitua pelo &lt;img&gt; do seu carro</div>
+          <!-- RB20 silhouette SVG -->
+          <svg viewBox="0 0 400 80" width="380" style="margin-top:12px;opacity:0.6">
+            <ellipse cx="200" cy="52" rx="170" ry="14" fill="rgba(224,4,0,0.12)"/>
+            <path d="M30 55 Q60 35 100 32 Q130 28 160 26 L180 18 Q195 10 210 10 Q225 10 235 14 L260 24 Q290 28 330 34 Q360 38 375 52 L355 56 Q320 42 280 38 L240 32 Q225 20 210 20 Q195 20 180 28 L155 34 Q120 38 80 46 Z" fill="#e00400"/>
+            <ellipse cx="95" cy="54" rx="18" ry="9" fill="#111" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <ellipse cx="310" cy="54" rx="18" ry="9" fill="#111" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <path d="M160 26 L165 12 L230 12 L235 26" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="float-shadow"></div>
+    </div>
+
+    <div class="btn-wrap">
+      <button class="btn-rb">▶ Explorar Time</button>
+      <button class="btn-outline">Ver Temporada</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-num" id="s-champ">0</div>
+        <div class="stat-label">Títulos Construtores</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="s-wins">0</div>
+        <div class="stat-label">Vitórias na F1</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="s-poles">0</div>
+        <div class="stat-label">Pole Positions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="s-year">0</div>
+        <div class="stat-label">Temporadas</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- CAROUSEL -->
+  <section id="carousel-section">
+    <p class="section-label">// Linha do Tempo //</p>
+    <h2 class="section-title">Nossa <span>História</span></h2>
+
+    <div class="carousel-outer">
+      <div class="carousel-track" id="c-track"></div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- DRIVERS -->
+  <section id="drivers">
+    <p class="section-label">// Grid 2024 //</p>
+    <h2 class="section-title">Nossos <span>Pilotos</span></h2>
+
+    <div class="drivers-grid">
+      <div class="driver-card">
+        <div class="driver-number">1</div>
+        <div class="driver-name">
+          <span class="driver-firstname">Max</span>
+          Verstappen
+        </div>
+        <p class="driver-country">🇳🇱 Holanda</p>
+        <div class="driver-stat">
+          <div class="driver-stat-row"><span>Número</span><span>#1</span></div>
+          <div class="driver-stat-row"><span>Títulos</span><span>4× Campeão</span></div>
+          <div class="driver-stat-row"><span>Vitórias</span><span>62+</span></div>
+          <div class="driver-stat-row"><span>Status</span><span style="color:var(--rb-gold)">Lenda Viva</span></div>
+        </div>
+      </div>
+
+      <div class="driver-card">
+        <div class="driver-number">11</div>
+        <div class="driver-name">
+          <span class="driver-firstname">Sergio</span>
+          Pérez
+        </div>
+        <p class="driver-country">🇲🇽 México</p>
+        <div class="driver-stat">
+          <div class="driver-stat-row"><span>Número</span><span>#11</span></div>
+          <div class="driver-stat-row"><span>Apelido</span><span>Checo</span></div>
+          <div class="driver-stat-row"><span>Vitórias</span><span>13+</span></div>
+          <div class="driver-stat-row"><span>Status</span><span style="color:var(--rb-red)">Ativo</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-logo">Oracle <span>Red Bull</span> Racing</div>
+  <div class="footer-note">© 2024 Oracle Red Bull Racing · Todos os direitos reservados</div>
+  <div class="footer-line"></div>
+</footer>
+
+<script>
+// ── LOADER ──
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('hide'), 2800);
+});
+
+// ── CANVAS BG ──
+const canvas = document.getElementById('bg-canvas');
+canvas.style.cssText = 'position:fixed;inset:0;z-index:0;';
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(true); }
+  reset(init) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : H + 10;
+    this.vy = -(Math.random() * .6 + .2);
+    this.vx = (Math.random() - .5) * .3;
+    this.r = Math.random() * 1.2 + .3;
+    this.life = 0;
+    this.maxLife = 300 + Math.random() * 400;
+    const t = Math.random();
+    this.color = t < .5 ? '#e00400' : t < .8 ? '#ffb800' : '#ffffff';
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy; this.life++;
+    if (this.life > this.maxLife || this.y < -10) this.reset(false);
+  }
+  draw() {
+    const f = this.life < 40 ? this.life/40 : this.life > this.maxLife-40 ? (this.maxLife-this.life)/40 : 1;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+    ctx.fillStyle = this.color + Math.floor(f * 150).toString(16).padStart(2,'0');
+    ctx.fill();
+  }
+}
+
+const particles = Array.from({length:100}, () => new Particle());
+
+function drawConnections() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i+1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 90) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(224,4,0,${(1-d/90)*0.08})`;
+        ctx.lineWidth = .5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+(function loop() {
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawConnections();
+  requestAnimationFrame(loop);
+})();
+
+// ── CAROUSEL DATA ──
+const items = [
+  {year:'2005', title:'Fundação', desc:'Milton Keynes se torna o lar da equipe que vai mudar a F1 para sempre.', badge:'Origem', gold:false},
+  {year:'2009', title:'Primeira Vitória', desc:'Sebastien Vettel cruza a linha em primeiro no GP da China. Uma era começa.', badge:'Marco Histórico', gold:true},
+  {year:'2010', title:'1º Campeonato', desc:'Vettel conquista o primeiro título de construtores da história da equipe.', badge:'Campeão', gold:true},
+  {year:'2011', title:'Domínio Total', desc:'15 vitórias em 19 corridas. A equipe redefine o que é possível na F1.', badge:'Era de Ouro', gold:true},
+  {year:'2013', title:'21 Vitórias', desc:'A temporada mais dominante da era moderna. Vettel vence as últimas 9 corridas.', badge:'Recorde', gold:false},
+  {year:'2021', title:'Verstappen #1', desc:'Max Verstappen briga até o último metro no GP de Abu Dhabi e conquista o título.', badge:'Dramático', gold:false},
+  {year:'2022', title:'RB18 — Invencível', desc:'17 vitórias em 22 corridas. O carro mais rápido de toda a história da F1.', badge:'Dominância', gold:true},
+  {year:'2023', title:'19 de 22', desc:'Max vence 19 corridas, quebrando todos os recordes da modalidade.', badge:'Lendário', gold:true},
+  {year:'2024', title:'RB20', desc:'A equipe lança o carro mais radical já visto em Milton Keynes.', badge:'Presente', gold:false},
+];
+
+const track = document.getElementById('c-track');
+[...items, ...items].forEach(d => {
+  const el = document.createElement('div');
+  el.className = 'c-card';
+  el.innerHTML = `
+    <div class="c-year">${d.year}</div>
+    <div class="c-title">${d.title}</div>
+    <div class="c-desc">${d.desc}</div>
+    <span class="c-badge${d.gold?' gold':''}">${d.badge}</span>
+  `;
+  track.appendChild(el);
+});
+
+// ── COUNTER ──
+function count(id, target, suffix='') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let v = 0;
+  const step = target / 70;
+  const t = setInterval(() => {
+    v = Math.min(v + step, target);
+    el.textContent = Math.floor(v) + suffix;
+    if (v >= target) clearInterval(t);
+  }, 28);
+}
+setTimeout(() => {
+  count('s-champ', 6, '×');
+  count('s-wins', 115, '+');
+  count('s-poles', 100, '+');
+  count('s-year', 20, '+');
+}, 3000);
+
+// ── SPEED LINES ──
+document.querySelectorAll('.speed-lines').forEach(wrap => {
+  for (let i = 0; i < 6; i++) {
+    const line = document.createElement('div');
+    line.className = 'speed-line';
+    line.style.cssText = `top:${20+Math.random()*60}%;width:${40+Math.random()*40}%;left:-50%;animation-duration:${1.5+Math.random()*1.5}s;animation-delay:${Math.random()*2}s;opacity:${.3+Math.random()*.4}`;
+    wrap.appendChild(line);
+  }
+});
+</script>
+</body>
+</html>
