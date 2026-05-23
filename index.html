@@ -11,8 +11,19 @@
 
 <body>
 
+  <div class="loader-demora" id="loader">
+    <div class="loader-logo">
+      <p class="loader-texto">RED BULL</p>
+      <span class="loader-subtexto">RACING</span>
+    </div>
+    <div class="loader-barra">
+      <div class="loader-caminho"></div>
+    </div>
+    <p class="loader-legenda">Preparando para a corrida...</p>
+  </div>
+
   <header>
-    <div class="entrada">
+    <div class="entrada" id="home">
       <h1 class="title">Red Bull Racing</h1>
     </div>
 
@@ -20,9 +31,9 @@
 
     <nav class="navegar">
       <ul class="nav-list">
-        <li class="nav-item"><a href="#">Home</a></li>
-        <li class="nav-item"><a href="#">Botões</a></li>
-        <li class="nav-item"><a href="#">Loader</a></li>
+        <li class="nav-item"><a href="#1">Sprint 1</a></li>
+        <li class="nav-item"><a href="#2">Sprint 2</a></li>
+        <li class="nav-item"><a href="#3">Sprint 3</a></li>
       </ul>
     </nav>
   </header>
@@ -37,22 +48,127 @@
           <img class="a" src="./images/carro-4.jpg" alt="Imagem 4">
           <img class="a" src="./images/carro-5.jpg" alt="Imagem 5">
         </div>
-      </div>
-
-      <div class="container-box">
-        <div class="box-glass">
-          <button class="btn-carro">
-            <img src="./images/carro-2.jpg" alt="Carro 2" class="btn-carro-img">
-          </button>
-          <h1 class="btn-carro-title">Explore mais</h1>
+        <div class="slider-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
         </div>
       </div>
 
-
+      <button class="botao-carro">
+<a href="https://www.redbullracing.com/">
+  <img class="botao-carro-img" src="./images/carro-2.jpg" alt="Carro 2">
+</a>
+      </button>
+      <h1 class="botao-carro-titulo">Explore mais</h1>
 
     </div>
   </div>
 
-</body>
+  <section class="Sprints">
+
+    <div class="sections" id="1">
+      <h2 class="sprint-titulo facil">🟢 Sprint 1 — Fácil</h2>
+      <div class="container-sprint">
+
+        <div class="conteudo">
+          <p class="exercicio-label">1. Caixa que muda de cor</p>
+          <div class="Caixa caixa-cor">
+            <p class="caixa-texto">RB</p>
+          </div>
+        </div>
+
+        <div class="conteudo">
+          <p class="exercicio-label">2. Imagem que gira</p>
+
+          <img src="./images/max.jpg" alt="Girando" class="img-girar">
+
+        </div>
+
+        <div class="conteudo">
+          <p class="exercicio-label">3. Texto piscando</p>
+
+          <p class="texto-piscar">POLE POSITION!</p>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="sections" id="2">
+      <h2 class="sprint-titulo medio">🟡 Sprint 2 — Médio</h2>
+      <div class="container-sprint">
+
+        <div class="conteudo">
+          <p class="exercicio-label">1. Botão pulsando</p>
+
+          <button class="botao-pulsar">Du Du Du Du !!!</button>
+
+        </div>
+
+        <div class="conteudo">
+          <p class="exercicio-label">2. Bola quicando</p>
+
+          <div class="bola"></div>
+          <div class="bola-sombra"></div>
+
+        </div>
+
+        <div class="conteudo">
+          <p class="exercicio-label">3. Itens surgindo</p>
+
+          <div class="surgir surgir-1">Verstappen</div>
+          <div class="surgir surgir-2">Perez</div>
+          <div class="surgir surgir-3">Newey</div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="sections" id="3">
+
+      <h2 class="sprint-titulo dificil">🔴 Sprint 3 — Difícil</h2>
+
+      <div class="container-sprint">
+
+        <div class="conteudo conteudo-banner">
+
+          <p class="exercicio-label">4. Banner profissional animado</p>
+
+          <div class="Caixa banner-caixa">
+
+            <div class="linhas">
+              <div class="linha"></div>
+              <div class="linha"></div>
+              <div class="linha"></div>
+              <div class="linha"></div>
+              <div class="linha"></div>
+            </div>
+
+            <div class="banner-conteudo">
+              <span class="ano">2023</span>
+              <h2 class="campeonato">WORLD CHAMPIONS</h2>
+              <p class="rb">Red Bull Racing · Construtores</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+ <footer>
+  <a href="#home">
+    <img src="./images/footer-logo.png" alt="logo Red Bull Racing" class="f-logo">
+  </a>
+  <p class="f-texto">© Alexandre Henrique.<br><small>Site feito por um fã</small></p>
+</footer>
 
 </html>
