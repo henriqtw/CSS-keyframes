@@ -157,8 +157,10 @@ header {
   padding-top: 30px;
   font-weight: 900;
   text-align: center;
-  animation: planarContinuo 2s infinite alternate ease-in-out;
+  animation: planarContinuo 2s infinite alternate ease-in-out; 
+  animation: neon 2s infinite alternate;
 }
+
 
 @keyframes planarContinuo {
   0% {
@@ -170,7 +172,23 @@ header {
   }
 }
 
+@keyframes neon{
 
+    from{
+        text-shadow:
+        0 0 10px rgb(255, 0, 0),
+        0 0 20px rgb(255, 102, 0),
+        0 0 40px rgb(255, 153, 0);
+    }
+
+    to{
+        text-shadow:
+        0 0 20px rgb(0, 89, 255),
+        0 0 40px rgb(0, 26, 255),
+        0 0 80px rgb(23, 0, 235);
+    }
+
+}
 
 .line {
   border: none;
